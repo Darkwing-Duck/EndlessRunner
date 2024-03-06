@@ -5,9 +5,14 @@ namespace Game.Engine
 	{
 		public readonly StatsRegistry Stats = new ();
 
-		public readonly uint Id;
+		public readonly uint Uid;
+		public readonly uint ConfigId;
 
-		public Element(uint id) => Id = id;
+		public Element(uint id, uint configId)
+		{
+			Uid = id;
+			ConfigId = configId;
+		}
 	}
 
 }

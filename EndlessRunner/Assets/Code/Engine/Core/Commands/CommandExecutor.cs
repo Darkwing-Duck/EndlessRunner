@@ -1,7 +1,14 @@
+using System;
+
 namespace Game.Engine
 {
 
-	public abstract class CommandExecutor<TCommand> where TCommand : ICommand
+	public interface ICommandExecutor<out TCommand> where TCommand : ICommand
+	{
+		CmdResult Execute(ICommand command);
+	}
+	
+	public abstract class CommandExecutor<TCommand> : ICommandExecutor<TCommand> where TCommand : ICommand
 	{
 		protected readonly World World;
 		protected readonly CommandCenter CommandCenter;
@@ -12,6 +19,15 @@ namespace Game.Engine
 			CommandCenter = commandCenter;
 		}
 
+		CmdResult ICommandExecutor<TCommand>.Execute(ICommand command)
+		{
+			if (command is not TCommand castedCommand) {
+				throw new ArgumentException("Wrong command type has been passed.");
+			}
+
+			return Execute(castedCommand);
+		}
+
 		public abstract CmdResult Execute(TCommand command);
 	}
 	
@@ -20,21 +36,23 @@ namespace Game.Engine
 		Failed = 0, Ok = 1 
 	}
 
-	public class CmdResult
+	public interface ICmdResult
 	{
-		public static readonly CmdResult Ok = new (CmdStatus.Ok);
-		public static readonly CmdResult Failed = new (CmdStatus.Failed, "Failed");
 		
-		public readonly CmdStatus Status;
-		public readonly string ErrorMessage;
+	}
 
-		public CmdResult(CmdStatus status, string error = null)
-		{
-			Status = status;
-			ErrorMessage = error;
-		}
+	public class CmdResult : ICmdResult
+	{
+		public static readonly CmdResult Ok = new CmdResult { Status = CmdStatus.Ok };
+		public static readonly CmdResult Failed = new CmdResult { Status = CmdStatus.Failed, ErrorMessage = "Failed"};
 
-		public static CmdResult FailedWith(string reason) => new (CmdStatus.Failed, reason);
+		public CmdStatus Status { get; internal set; }
+		public string ErrorMessage { get; internal set; }
+
+		public static CmdResult FailedWith(string reason) => new CmdResult {
+			Status = CmdStatus.Failed, 
+			ErrorMessage = reason
+		};
 	}
 
 }

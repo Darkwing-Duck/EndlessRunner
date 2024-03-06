@@ -2,7 +2,7 @@
     "name": "Game.Engine",
     "rootNamespace": "",
     "references": [
-        "GUID:e080e9746345e4949914428fcdfa667c"
+        "GUID:2cb74df19c56e43738af1ac3105c499e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

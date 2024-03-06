@@ -7,11 +7,16 @@ namespace Game.Engine
 	public class ElementsRegistry
 	{
 		private readonly Dictionary<uint, Element> _elements = new();
+		private readonly IElementUidGenerator _uidGenerator;
+
+		public ElementsRegistry(IElementUidGenerator uidGenerator) => _uidGenerator = uidGenerator;
+
+		internal uint GenerateNextUid() => _uidGenerator.Next();
 
 		internal void Add(Element value)
 		{
-			if (!_elements.TryAdd(value.Id, value)) {
-				throw new ArgumentException($"Element '{value.Id}' is already in the world.");
+			if (!_elements.TryAdd(value.Uid, value)) {
+				throw new ArgumentException($"Element '{value.Uid}' is already in the world.");
 			}
 		}
 		
@@ -33,6 +38,18 @@ namespace Game.Engine
 			return _elements[id];
 		}
 		
+		public TElement Find<TElement>(uint id) where TElement : Element
+		{
+			var element = Find(id);
+
+			if (element is not TElement) {
+				var type = typeof(TElement);
+				throw new NullReferenceException($"Can't find '{type.Name}' with id - '{id}'.");
+			}
+
+			return (TElement)_elements[id];
+		}
+		
 		public bool TryFind(uint id, out Element result)
 		{
 			if (!_elements.ContainsKey(id)) {
@@ -41,6 +58,22 @@ namespace Game.Engine
 			}
 
 			result = _elements[id];
+			return true;
+		}
+		
+		public bool TryFind<TElement>(uint id, out TElement result) where TElement : Element
+		{
+			if (!TryFind(id, out var element)) {
+				result = null;
+				return false;
+			}
+
+			if (element is not TElement) {
+				result = null;
+				return false;
+			}
+
+			result = (TElement)_elements[id];
 			return true;
 		}
 	}
