@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Game.Configs
 {
 
-	public class ElementConfig : GameConfig
+	public class GameplayElementConfig : GameConfig
 	{
 		[SerializeField]
 		private string _viewKey;

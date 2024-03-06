@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Game.Common;
 using Game.Configs;
 using Game.Engine;
 
 namespace Game.Presentation
 {
 	
-	public class PresentationRoot : IListenersProvider
+	public class PresentationRoot : IUpdatable, IListenersProvider
 	{
 		private ConfigsRegistry _configsRegistry;
 		private World _world;
@@ -15,6 +16,15 @@ namespace Game.Presentation
 		public PresentationRoot(World world, ConfigsRegistry configsRegistry) {
 			_world = world;
 			_configsRegistry = configsRegistry;
+		}
+
+		public void Update()
+		{
+			foreach (var presenter in _presenters.Values) {
+				if (presenter is IUpdatable castedPresenter) {
+					castedPresenter.Update();
+				}
+			}
 		}
 		
 		public void Add(Presenter presenter)

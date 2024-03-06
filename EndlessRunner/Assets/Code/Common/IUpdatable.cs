@@ -1,9 +1,9 @@
-namespace Code.Common
+namespace Game.Common
 {
 
 	public interface IUpdatable
 	{
-		
+		void Update();
 	}
 
 }

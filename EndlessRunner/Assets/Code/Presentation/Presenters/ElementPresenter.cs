@@ -6,7 +6,7 @@ namespace Game.Presentation
 {
 
 	public abstract class ElementPresenter<TConfig, TModel, TView> : PresenterWithModel<TModel, TView>
-		where TConfig : ElementConfig
+		where TConfig : GameplayElementConfig
 		where TModel : Element
 		where TView : MonoBehaviour
 	{

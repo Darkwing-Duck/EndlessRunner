@@ -15,7 +15,7 @@ namespace Game.Presentation
 		/// Sets LevelPresenter's view as a parent for hero
 		/// </summary>
 		protected override Transform InitializeViewParent() => 
-			Root.FindSinglePresenter<LevelPresenter>().View.transform;
+			Root.FindSinglePresenter<LevelPresenter>().View.ElementsContainer;
 
 		protected override CollectibleConfig InitializeConfig() => 
 			Configs.Collectibles.Get(Model.ConfigId);

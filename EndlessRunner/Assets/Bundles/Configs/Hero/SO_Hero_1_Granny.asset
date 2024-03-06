@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: SO_Hero_1_Granny
   m_EditorClassIdentifier: 
   _id: 1
-  _name: Granny
   _viewKey: Granny
-  _speed: 0.1
+  _speed: 5

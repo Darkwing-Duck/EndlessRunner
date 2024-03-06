@@ -9,7 +9,10 @@ namespace Game.Infrastructure
 
 	public class GameLoop : MonoBehaviour
 	{
-		private async void Start()
+		private PresentationRoot _presentation;
+		private GameEngine _engine;
+		
+		private async void Awake()
 		{
 			// initialize Addressables
 			var handle =  Addressables.InitializeAsync();
@@ -20,19 +23,20 @@ namespace Game.Infrastructure
 			var configsRegistry = new ConfigsRegistry(configsProvider);
 			await configsRegistry.InitializeAsync();
 			
-			var engine = new GameEngine();
-			var presentation = new PresentationRoot(engine.World, configsRegistry);
+			_engine = new GameEngine();
+			_presentation = new PresentationRoot(_engine.World, configsRegistry);
 
-			RegisterEngineReactions(engine, presentation);
+			RegisterEngineReactions(_engine, _presentation);
 			
-			var levelPresenter = new LevelPresenter(engine.World);
-			presentation.Add(levelPresenter);
+			var levelConfig = configsRegistry.Levels.Get(2);
+			var levelPresenter = new LevelPresenter(levelConfig);
+			_presentation.Add(levelPresenter);
 
 			var heroConfig = configsRegistry.Heroes.Get(1);
 			var collectibleConfig = configsRegistry.Collectibles.Get(1);
 			
-			engine.Apply(new CreateHeroCommand(heroConfig.Id, heroConfig.Speed));
-			engine.Apply(new CreateCollectibleCommand(collectibleConfig.Id));
+			_engine.Apply(new CreateHeroCommand(heroConfig.Id, heroConfig.Speed));
+			_engine.Apply(new CreateCollectibleCommand(collectibleConfig.Id));
 		}
 
 		private void RegisterEngineReactions(GameEngine engine, IListenersProvider listenersProvider)
@@ -43,7 +47,7 @@ namespace Game.Infrastructure
 		
 		private void Update()
 		{
-			
+			_presentation?.Update();
 		}
 	}
 

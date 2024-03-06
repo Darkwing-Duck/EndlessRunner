@@ -1,7 +1,9 @@
+using UnityEngine;
+
 namespace Code.Presentation.View
 {
 
-	public class CameraView
+	public class CameraView : MonoBehaviour
 	{
 		
 	}
