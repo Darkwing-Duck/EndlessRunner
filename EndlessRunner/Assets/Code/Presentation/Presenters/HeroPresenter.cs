@@ -9,6 +9,7 @@ namespace Game.Presentation
 	public class HeroPresenter : ElementPresenter<HeroConfig, Hero, HeroView>
 	{
 		protected override string InitializeViewGroup() => "Hero";
+		
 		public HeroPresenter(Hero model) : base(model) { }
 
 		/// <summary>
@@ -35,13 +36,11 @@ namespace Game.Presentation
 
 		/// <summary>
 		/// Calls when hero collides with any of element.
-		/// Pushes ResolveCollisionCommand to engine
+		/// Pushes HeroCollectItemCommand to engine
 		/// </summary>
 		private void OnCollideWith(ElementUidRef elementUid)
 		{
-			// TODO: Push HeroCollectItem command with data
-			// HeroUid = Model.Uid
-			// CollectibleUid = elementUid
+			EngineInput.Push(new HeroCollectItemCommand(Model.Uid, elementUid.Value));
 		}
 
 		protected override void OnDeactivate()

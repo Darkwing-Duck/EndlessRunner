@@ -24,7 +24,7 @@ namespace Game.Infrastructure
 			await configsRegistry.InitializeAsync();
 			
 			_engine = new GameEngine();
-			_presentation = new PresentationRoot(_engine.World, configsRegistry);
+			_presentation = new PresentationRoot(_engine.World, configsRegistry, _engine);
 
 			RegisterEngineReactions(_engine, _presentation);
 			
@@ -46,6 +46,7 @@ namespace Game.Infrastructure
 		{
 			engine.RegisterReaction(new ReactionOnCreateHero(listenersProvider));
 			engine.RegisterReaction(new ReactionOnCreateCollectible(listenersProvider));
+			engine.RegisterReaction(new ReactionOnDestroyCollectible(listenersProvider));
 		}
 		
 		private void Update()

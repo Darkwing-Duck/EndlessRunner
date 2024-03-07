@@ -11,13 +11,15 @@ namespace Game.Presentation
 	public class PresentationRoot : IUpdatable, IListenersProvider
 	{
 		private ConfigsRegistry _configsRegistry;
+		private IEngineInput _engineInput;
 		private World _world;
 		private Dictionary<object, Presenter> _presenters = new();
 		private Dictionary<MonoBehaviour, Presenter> _presentersByViewMap = new();
 
-		public PresentationRoot(World world, ConfigsRegistry configsRegistry) {
+		public PresentationRoot(World world, ConfigsRegistry configsRegistry, IEngineInput engineInput) {
 			_world = world;
 			_configsRegistry = configsRegistry;
+			_engineInput = engineInput;
 		}
 
 		public void Update()
@@ -40,6 +42,7 @@ namespace Game.Presentation
 			presenter.Root = this;
 			presenter.Configs = _configsRegistry;
 			presenter.World = _world;
+			presenter.EngineInput = _engineInput;
 			
 			presenter.Configure();
 			presenter.Build();

@@ -20,13 +20,15 @@ namespace Game.Engine
 			}
 		}
 		
-		internal void Remove(uint id)
+		internal Element Remove(uint uid)
 		{
-			if (!_elements.ContainsKey(id)) {
-				throw new NullReferenceException($"Element '{id}' doesn't exist in the world.");
+			if (!_elements.ContainsKey(uid)) {
+				throw new NullReferenceException($"Element '{uid}' doesn't exist in the world.");
 			}
 
-			_elements.Remove(id);
+			var result = _elements[uid];
+			_elements.Remove(uid);
+			return result;
 		}
 
 		public Element Find(uint id)

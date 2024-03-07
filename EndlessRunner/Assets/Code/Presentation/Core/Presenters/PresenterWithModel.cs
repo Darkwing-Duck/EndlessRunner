@@ -8,7 +8,7 @@ namespace Game.Presentation
 	{
 		public TModel Model { get; protected set; }
 
-		public PresenterWithModel(TModel model) : base(model) 
+		public PresenterWithModel(object key, TModel model) : base(key) 
 		{
 			Model = model;
 		}

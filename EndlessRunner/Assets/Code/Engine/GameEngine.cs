@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Game.Common;
 using Utils;
@@ -7,18 +6,16 @@ using Utils;
 namespace Game.Engine
 {
 	
-	public class GameEngine : IUpdatable
+	public class GameEngine : IEngineInput, IExecutorRegistry, IUpdatable
 	{
 		public readonly World World;
 		
-		private readonly List<IReactionsRegistry> _reactionRegistries;
 		private readonly CommandCenter _commandCenter;
 		private readonly ElementUidGenerator _uidGenerator;
 
 		public GameEngine()
 		{
 			World = new World(new ElementUidGenerator());
-			_reactionRegistries = new();
 			_uidGenerator = new ElementUidGenerator();
 			_commandCenter = new CommandCenter(_uidGenerator);
 
@@ -78,72 +75,27 @@ namespace Game.Engine
 
 		/// <summary>
 		/// The only way to make changes in the world.
-		/// Applies changes to the world corresponding to the command
+		/// Pushes command to command queue to be processed on Update
 		/// </summary>
 		/// <param name="command"></param>
 		public void Push(ICommand command)
 		{
-			var result = _commandCenter.Execute(command);
-			
-			if (TryFindReactionRegistry(result.GetType(), out var registry)) {
-				registry.Flush(result);
-			}
-		}
-
-		public void RegisterReaction<T>(IEngineReactionOn<T> reaction) where T : CmdResult
-		{
-			if (!TryFindReactionRegistry<T>(out var registry)) {
-				registry = new ReactionsRegistry<T>();
-				_reactionRegistries.Add(registry);
-			}
-			
-			registry.Add(reaction);
-		}
-		
-		public void UnregisterReaction<T>(IEngineReactionOn<T> reaction) where T : CmdResult
-		{
-			if (!TryFindReactionRegistry<T>(out var registry)) {
-				throw new NullReferenceException($"Can't find reaction for command result '{typeof(T).Name}'");
-			}
-			
-			registry.Remove(reaction);
-		}
-
-		private bool TryFindReactionRegistry<T>(out ReactionsRegistry<T> result) where T : CmdResult
-		{
-			foreach (var registry in _reactionRegistries) {
-				if (registry is not ReactionsRegistry<T> casted)
-					continue;
-
-				result = casted;
-				return true;
-			}
-
-			result = null;
-			return false;
-		}
-		
-		private bool TryFindReactionRegistry(Type cmdResultType, out IReactionsRegistry result)
-		{
-			foreach (var registry in _reactionRegistries) {
-				var type = registry.GetType();
-				var genericType = type.GetGenericArguments()[0];
-				
-				if (genericType != cmdResultType)
-					continue;
-
-				result = registry;
-				return true;
-			}
-
-			result = null;
-			return false;
+			_commandCenter.Enqueue(command);
 		}
 
 		/// <summary>
 		/// Simulates one frame of the world
 		/// </summary>
-		public void Update() { }
+		public void Update()
+		{
+			_commandCenter.Update();
+		}
+
+		public void RegisterReaction<T>(IEngineReactionOn<T> reaction) where T : CmdResult =>
+			_commandCenter.RegisterReaction(reaction);
+
+		public void UnregisterReaction<T>(IEngineReactionOn<T> reaction) where T : CmdResult =>
+			_commandCenter.UnregisterReaction(reaction);
 	}
 
 }

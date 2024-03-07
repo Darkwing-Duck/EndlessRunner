@@ -27,6 +27,11 @@ namespace Game.Presentation
 		public ConfigsRegistry Configs { get; internal set; }
 		
 		/// <summary>
+		/// Provides interface to push commands to engine
+		/// </summary>
+		public IEngineInput EngineInput { get; internal set; }
+		
+		/// <summary>
 		/// Provides access to world state (Read Only)
 		/// </summary>
 		public World World { get; internal set; }

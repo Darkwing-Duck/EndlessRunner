@@ -10,9 +10,10 @@ namespace Game.Presentation
 	public class LevelPresenter : PresenterWithModel<LevelConfig, LevelView>
 		, IListener<CreateHeroCommand.Result>
 		, IListener<CreateCollectibleCommand.Result>
+		, IListener<DestroyCollectibleCommand.Result>
 		, IUpdatable
 	{
-		public LevelPresenter(LevelConfig model) : base(model) { }
+		public LevelPresenter(LevelConfig model) : base(model, model) { }
 		protected override string InitializeViewKey() => Model.ViewKey;
 		protected override string InitializeViewGroup() => "Level";
 		
@@ -36,6 +37,9 @@ namespace Game.Presentation
 			_followTarget = hero;
 		}
 
+		/// <summary>
+		/// React on result of CrateHeroCommand
+		/// </summary>
 		public void On(CreateHeroCommand.Result cmdResult)
 		{
 			var heroModel = World.Elements.Find<Hero>(cmdResult.HeroUid);
@@ -47,6 +51,9 @@ namespace Game.Presentation
 			SetActiveHero(heroPresenter);
 		}
 
+		/// <summary>
+		/// React on result of CreateCollectibleCommand
+		/// </summary>
 		public void On(CreateCollectibleCommand.Result cmdResult)
 		{
 			var collectibleModel = World.Elements.Find<Collectible>(cmdResult.CollectibleUid);
@@ -57,6 +64,16 @@ namespace Game.Presentation
 
 			var pos = new Vector3(5f * cmdResult.CollectibleUid, 1.5f, 0f);
 			collectiblePresenter.View.transform.localPosition = pos;
+		}
+
+		/// <summary>
+		/// React on result of DestroyCollectibleCommand
+		/// </summary>
+		public void On(DestroyCollectibleCommand.Result cmdResult)
+		{
+			// Removes presenter by key
+			// Any of ElementPresenter use element uid as a key
+			Root.Remove(cmdResult.CollectibleUid);
 		}
 	}
 

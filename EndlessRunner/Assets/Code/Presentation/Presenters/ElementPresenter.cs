@@ -13,7 +13,7 @@ namespace Game.Presentation
 	{
 		protected TConfig Config { get; set; }
 
-		public ElementPresenter(TModel model) : base(model) { }
+		public ElementPresenter(TModel model) : base(model.Uid, model) { }
 
 		internal override void Configure()
 		{
