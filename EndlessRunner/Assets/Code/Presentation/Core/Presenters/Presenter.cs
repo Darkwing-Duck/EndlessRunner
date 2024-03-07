@@ -1,6 +1,7 @@
 using System;
 using Game.Configs;
 using Game.Engine;
+using Game.Presentation.View;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
@@ -10,9 +11,24 @@ namespace Game.Presentation
 
 	public abstract class Presenter
 	{
+		/// <summary>
+		/// Key of the presenter
+		/// </summary>
 		public readonly object Key;
+		
+		/// <summary>
+		/// Root of the presentation system
+		/// </summary>
 		public PresentationRoot Root { get; internal set; }
+		
+		/// <summary>
+		/// Provides access to all the game configs
+		/// </summary>
 		public ConfigsRegistry Configs { get; internal set; }
+		
+		/// <summary>
+		/// Provides access to world state (Read Only)
+		/// </summary>
 		public World World { get; internal set; }
 
 		protected Presenter(object key) => Key = key;
@@ -24,10 +40,27 @@ namespace Game.Presentation
 	
 	public abstract class Presenter<TView> : Presenter where TView : MonoBehaviour
 	{
+		/// <summary>
+		/// The view is controlling by the presenter
+		/// </summary>
 		public TView View { get; protected set; }
+		
+		/// <summary>
+		/// Group name of the asset. Used to build asset loading path.
+		/// ViewPath: Prefabs/{ViewGroup}/P_{ViewGroup}_{key}.prefab
+		/// </summary>
 		protected string ViewGroup { get; private set; }
-		protected Transform ViewParent { get; private set; }
+		
+		/// <summary>
+		/// Key of the asset. Used to build asset loading path.
+		/// ViewPath: Prefabs/{ViewGroup}/P_{ViewGroup}_{ViewKey}.prefab
+		/// </summary>
 		protected string ViewKey { get; private set; }
+		
+		/// <summary>
+		/// Indicates a parent transform for the presenter's view
+		/// </summary>
+		protected Transform ViewParent { get; private set; }
 
 		public Presenter(object key) : base(key) { }
 
@@ -35,7 +68,7 @@ namespace Game.Presentation
 		protected abstract string InitializeViewKey();
 		protected abstract string InitializeViewGroup();
 
-		protected virtual TView LoadViewWith(string key)
+		private TView LoadViewWith(string key)
 		{
 			var viewKey = $"Prefabs/{ViewGroup}/P_{ViewGroup}_{key}.prefab";
 			var prefab = Addressables.LoadAssetAsync<GameObject>(viewKey).WaitForCompletion();
@@ -50,12 +83,19 @@ namespace Game.Presentation
 
 		internal override void Configure() { }
 
+		/// <summary>
+		/// Builds the presenter
+		/// </summary>
 		internal override void Build()
 		{
 			ViewParent = InitializeViewParent();
 			ViewGroup = InitializeViewGroup();
 			ViewKey = InitializeViewKey();
 			View = LoadViewWith(ViewKey);
+
+			// cache presenter key on gameObject to simplify searching a presenter by gameObject
+			var presenterKey = View.gameObject.AddComponent<PresenterKeyReference>();
+			presenterKey.Value = Key;
 			
 			OnActivate();
 		}
@@ -66,9 +106,15 @@ namespace Game.Presentation
 			Object.Destroy(View.gameObject);
 		}
 
+		/// <summary>
+		/// Calls when the presenter is ready and it's view is already loaded.
+		/// </summary>
 		protected virtual void OnActivate()
 		{ }
 		
+		/// <summary>
+		/// Calls before view of the presenter will be destroyed.
+		/// </summary>
 		protected virtual void OnDeactivate()
 		{ }
 	}

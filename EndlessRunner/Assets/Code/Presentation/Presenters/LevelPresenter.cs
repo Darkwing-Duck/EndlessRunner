@@ -2,6 +2,7 @@ using Code.Presentation.View;
 using Game.Common;
 using Game.Configs;
 using Game.Engine;
+using UnityEngine;
 
 namespace Game.Presentation
 {
@@ -53,6 +54,9 @@ namespace Game.Presentation
 			
 			// add presenter to presentation root to be displayed on screen
 			Root.Add(collectiblePresenter);
+
+			var pos = new Vector3(5f * cmdResult.CollectibleUid, 1.5f, 0f);
+			collectiblePresenter.View.transform.localPosition = pos;
 		}
 	}
 

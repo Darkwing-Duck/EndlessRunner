@@ -1,5 +1,6 @@
 using Game.Configs;
 using Game.Engine;
+using Game.Presentation.View;
 using UnityEngine;
 
 namespace Game.Presentation
@@ -17,6 +18,14 @@ namespace Game.Presentation
 		internal override void Configure()
 		{
 			Config = InitializeConfig();
+		}
+
+		internal override void Build()
+		{
+			base.Build();
+
+			var elementUid = View.gameObject.AddComponent<ElementUidRef>();
+			elementUid.Value = Model.Uid;
 		}
 
 		protected abstract TConfig InitializeConfig();

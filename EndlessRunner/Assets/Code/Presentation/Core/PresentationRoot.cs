@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.Common;
 using Game.Configs;
 using Game.Engine;
+using UnityEngine;
 
 namespace Game.Presentation
 {
@@ -12,6 +13,7 @@ namespace Game.Presentation
 		private ConfigsRegistry _configsRegistry;
 		private World _world;
 		private Dictionary<object, Presenter> _presenters = new();
+		private Dictionary<MonoBehaviour, Presenter> _presentersByViewMap = new();
 
 		public PresentationRoot(World world, ConfigsRegistry configsRegistry) {
 			_world = world;

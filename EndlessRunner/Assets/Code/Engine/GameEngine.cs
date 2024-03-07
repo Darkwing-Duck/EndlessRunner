@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Common;
 using Utils;
 
 namespace Game.Engine
 {
 	
-	public class GameEngine
+	public class GameEngine : IUpdatable
 	{
 		public readonly World World;
 		
@@ -80,7 +81,7 @@ namespace Game.Engine
 		/// Applies changes to the world corresponding to the command
 		/// </summary>
 		/// <param name="command"></param>
-		public void Apply(ICommand command)
+		public void Push(ICommand command)
 		{
 			var result = _commandCenter.Execute(command);
 			

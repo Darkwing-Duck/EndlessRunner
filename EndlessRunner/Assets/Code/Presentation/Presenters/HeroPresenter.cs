@@ -17,6 +17,9 @@ namespace Game.Presentation
 		protected override Transform InitializeViewParent() => 
 			Root.FindSinglePresenter<LevelPresenter>().View.ElementsContainer;
 
+		/// <summary>
+		/// Cache config of the hero
+		/// </summary>
 		protected override HeroConfig InitializeConfig() => 
 			Configs.Heroes.Get(Model.ConfigId);
 
@@ -26,6 +29,24 @@ namespace Game.Presentation
 			
 			var speedStat = Model.Stats.Find<GameStat.Speed>();
 			View.SetSpeed(speedStat.GetValue());
+
+			View.OnCollideWith += OnCollideWith;
+		}
+
+		/// <summary>
+		/// Calls when hero collides with any of element.
+		/// Pushes ResolveCollisionCommand to engine
+		/// </summary>
+		private void OnCollideWith(ElementUidRef elementUid)
+		{
+			// TODO: Push HeroCollectItem command with data
+			// HeroUid = Model.Uid
+			// CollectibleUid = elementUid
+		}
+
+		protected override void OnDeactivate()
+		{
+			View.OnCollideWith -= OnCollideWith;
 		}
 	}
 

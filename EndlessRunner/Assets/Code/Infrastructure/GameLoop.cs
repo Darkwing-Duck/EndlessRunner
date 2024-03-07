@@ -33,10 +33,13 @@ namespace Game.Infrastructure
 			_presentation.Add(levelPresenter);
 
 			var heroConfig = configsRegistry.Heroes.Get(1);
-			var collectibleConfig = configsRegistry.Collectibles.Get(1);
 			
-			_engine.Apply(new CreateHeroCommand(heroConfig.Id, heroConfig.Speed));
-			_engine.Apply(new CreateCollectibleCommand(collectibleConfig.Id));
+			_engine.Push(new CreateHeroCommand(heroConfig.Id, heroConfig.Speed));
+			
+			
+			_engine.Push(new CreateCollectibleCommand(1));
+			_engine.Push(new CreateCollectibleCommand(2));
+			_engine.Push(new CreateCollectibleCommand(3));
 		}
 
 		private void RegisterEngineReactions(GameEngine engine, IListenersProvider listenersProvider)
@@ -47,6 +50,7 @@ namespace Game.Infrastructure
 		
 		private void Update()
 		{
+			_engine?.Update();
 			_presentation?.Update();
 		}
 	}

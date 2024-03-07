@@ -1,11 +1,14 @@
+using System;
 using UnityEngine;
 
 namespace Game.Presentation.View
 {
 	
 	[RequireComponent(typeof(Rigidbody))]
-	public class HeroView : MonoBehaviour
+	public class HeroView : ElementView
 	{
+		public event Action<ElementUidRef> OnCollideWith; 
+		
 		[SerializeField]
 		private Rigidbody _rigidbody;
 
@@ -21,6 +24,18 @@ namespace Game.Presentation.View
 		{
 			var moveVector = Vector3.right * _speed * Time.fixedDeltaTime; 
 			_rigidbody.MovePosition(_rigidbody.position + moveVector);
+		}
+
+		private void OnTriggerEnter(Collider other)
+		{
+			if (other.TryGetComponent<ElementUidRef>(out var component)) {
+				OnCollideWith?.Invoke(component);
+			}
+		}
+
+		private void OnDestroy()
+		{
+			OnCollideWith = null;
 		}
 
 		private void OnValidate()
