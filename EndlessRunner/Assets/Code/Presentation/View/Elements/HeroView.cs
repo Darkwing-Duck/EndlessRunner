@@ -11,6 +11,11 @@ namespace Game.Presentation.View
 		
 		[SerializeField]
 		private Rigidbody _rigidbody;
+		
+		[SerializeField]
+		private Animator _animator;
+
+		public Animator Animator => _animator;
 
 		private float _speed;
 
