@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Presentation.View;
@@ -26,31 +27,74 @@ namespace Code.Presentation.View
 		
 		[SerializeField]
 		private CameraView _camera;
+
+		private readonly uint _initializePoolItems = 5;
+		private Stack<LevelSectionView> _pool = new();
 		
 		public Transform ElementsContainer => _elementsContainer;
 		public CameraView Camera => _camera;
 
 		private List<LevelSectionView> _sections = new ();
 
+		public LevelSectionView LastSection => _sections.Last();
+
+		private Transform _poolContainer;
+
 		private void Awake()
 		{
+			// Generate initial level sections
 			for (var i = 0; i < _initialSectionsCount; i++) {
 				GenerateSection();
 			}
 		}
 
+		private void Start()
+		{
+			_poolContainer = new GameObject("Pool").transform;
+			_poolContainer.SetParent(transform);
+			
+			StartCoroutine(InitializePool());
+		}
+
+		/// <summary>
+		/// Initialize pool with initial sections count
+		/// </summary>
+		private IEnumerator InitializePool()
+		{
+			for (var i = 0; i < _initializePoolItems; i++) {
+				var newSection = Instantiate(_sectionPrefab, _poolContainer);
+				newSection.gameObject.SetActive(false);
+				_pool.Push(newSection);
+				
+				yield return null;
+			}
+		}
+
+		/// <summary>
+		/// Generates new level section.
+		/// Takes it from pool or instantiates new
+		/// </summary>
 		public void GenerateSection()
 		{
-			var newSection = Instantiate(_sectionPrefab, _sectionsContainer);
+			LevelSectionView newSection;
+
+			if (_pool.Count > 0) {
+				newSection = _pool.Pop();
+				newSection.transform.SetParent(_sectionsContainer);
+				newSection.gameObject.SetActive(true);
+			} else {
+				newSection = Instantiate(_sectionPrefab, _sectionsContainer);
+			}
 
 			if (_sections.Count > 0) {
-				var lastSection = _sections.Last();
+				var lastSection = LastSection;
 				var pos = lastSection.EndPoint.position - newSection.StartPoint.localPosition;
 				newSection.transform.position = pos;
+			} else {
+				newSection.transform.position = Vector3.zero;
 			}
 			
 			_sections.Add(newSection);
-
 			TryKeepMaxSectionCount();
 		}
 
@@ -71,7 +115,9 @@ namespace Code.Presentation.View
 			var sectionToRemove = _sections[0];
 			_sections.RemoveAt(0);
 			
-			Destroy(sectionToRemove);
+			sectionToRemove.gameObject.SetActive(false);
+			sectionToRemove.transform.SetParent(_poolContainer);
+			_pool.Push(sectionToRemove);
 		}
 
 		private void OnValidate()

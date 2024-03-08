@@ -1,3 +1,4 @@
+using System;
 using Code.Presentation.View;
 using Game.Common;
 using Game.Configs;
@@ -29,9 +30,31 @@ namespace Game.Presentation
 			if (_followTarget is null)
 				return;
 
+			GenerateLevel();
+
+			// update camera position
 			View.Camera.transform.position = _followTarget.View.transform.position;
 		}
+
+		/// <summary>
+		/// Generates new level section if distance between hero
+		/// and last level section's endPoint less than constant value
+		/// </summary>
+		private void GenerateLevel()
+		{
+			var lastLevelSectionStartPosition = View.LastSection.StartPoint.transform.position;
+			var lastLevelSectionEndPosition = View.LastSection.EndPoint.transform.position;
+			var heroDistanceToEndOfLastSection = Math.Abs(_followTarget.View.transform.position.x - lastLevelSectionEndPosition.x);
+			var triggerDistance = lastLevelSectionEndPosition.x - lastLevelSectionStartPosition.x;
+
+			if (heroDistanceToEndOfLastSection <= triggerDistance) {
+				View.GenerateSection();
+			}
+		}
 		
+		/// <summary>
+		/// Sets hero to follow by the camera
+		/// </summary>
 		public void SetActiveHero(HeroPresenter hero)
 		{
 			_followTarget = hero;
