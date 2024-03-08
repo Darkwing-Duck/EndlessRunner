@@ -7,6 +7,8 @@ namespace Game.Presentation
 {
 
 	public class HeroPresenter : ElementPresenter<HeroConfig, Hero, HeroView>
+		, IListener<AddStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>
+		, IListener<RemoveStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>
 	{
 		protected override string InitializeViewGroup() => "Hero";
 		
@@ -46,6 +48,29 @@ namespace Game.Presentation
 		protected override void OnDeactivate()
 		{
 			View.OnCollideWith -= OnCollideWith;
+		}
+		
+		// Syncs hero speed from model to view
+		private void UpdateSpeed()
+		{
+			var stat = Model.Stats.Find<GameStat.Speed>();
+			View.SetSpeed(stat.GetValue());
+		}
+
+		/// <summary>
+		/// React on add speed stat modifier
+		/// </summary>
+		public void On(AddStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed> cmdResult)
+		{
+			UpdateSpeed();
+		}
+
+		/// <summary>
+		/// React on remove speed stat modifier
+		/// </summary>
+		public void On(RemoveStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed> cmdResult)
+		{
+			UpdateSpeed();
 		}
 	}
 

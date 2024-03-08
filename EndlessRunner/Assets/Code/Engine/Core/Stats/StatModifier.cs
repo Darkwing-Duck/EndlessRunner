@@ -5,19 +5,25 @@ namespace Game.Engine
 	{
 		protected readonly float ModifierValue;
 
-		protected StatModifier(float modifierValue) => ModifierValue = modifierValue;
+		public object Group { get; private set; }
+
+		/// <param name="group">Indicates that the modifier is related to the group and can be used to remove all modifiers by the group</param>
+		protected StatModifier(float modifierValue, object group = default) {
+			ModifierValue = modifierValue;
+			Group = group;
+		}
 
 		public abstract float Modify(float statValue);
 
 		public class Add : StatModifier
 		{
-			public Add(float modifierValue) : base(modifierValue) { }
+			public Add(float modifierValue, object group = null) : base(modifierValue, group) { }
 			public override float Modify(float statValue) => statValue + ModifierValue;
 		}
 		
 		public class Sub : StatModifier
 		{
-			public Sub(float modifierValue) : base(modifierValue) { }
+			public Sub(float modifierValue, object group = null) : base(modifierValue, group) { }
 			public override float Modify(float statValue) => statValue - ModifierValue;
 		}
 	}

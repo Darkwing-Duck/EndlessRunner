@@ -7,17 +7,9 @@ namespace Game.Engine
 
 	public class CommandCenter : IExecutorRegistry, IUpdatable
 	{
-		private Dictionary<Type, ICommandExecutor<ICommand>> _executors = new();
-		private ElementUidGenerator _uidGenerator;
-		private readonly Queue<ICommand> _commandQueue;
-		private readonly List<IReactionsRegistry> _reactionRegistries;
-
-		public CommandCenter(ElementUidGenerator uidGenerator) 
-		{
-			_uidGenerator = uidGenerator;
-			_commandQueue = new ();
-			_reactionRegistries = new();
-		}
+		private readonly Dictionary<Type, ICommandExecutor<ICommand>> _executors = new();
+		private readonly Queue<ICommand> _commandQueue = new ();
+		private readonly List<IReactionsRegistry> _reactionRegistries = new();
 
 		public void Enqueue(ICommand command)
 		{

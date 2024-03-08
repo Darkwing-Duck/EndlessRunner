@@ -78,6 +78,13 @@ namespace Game.Engine
 			result = (TElement)_elements[id];
 			return true;
 		}
+
+		public void ForEach(Action<Element> callback)
+		{
+			foreach (var element in _elements.Values) {
+				callback?.Invoke(element);
+			}
+		}
 	}
 
 }

@@ -1,18 +1,14 @@
+using Game.Engine.Core;
+
 namespace Game.Engine
 {
 
-	public class Element
+	public class Element : WorldEntityWithConfig
 	{
 		public readonly StatsRegistry Stats = new ();
+		public readonly StatusRegistry Statuses = new ();
 
-		public readonly uint Uid;
-		public readonly uint ConfigId;
-
-		public Element(uint id, uint configId)
-		{
-			Uid = id;
-			ConfigId = configId;
-		}
+		public Element(uint uid, uint configId) : base(uid, configId) { }
 	}
 
 }

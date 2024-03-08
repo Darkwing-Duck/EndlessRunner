@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6f0531e50cc4116a3ddb7bc5afe8e6c, type: 3}
-  m_Name: SO_Collectible_2_SpeedDown
+  m_Script: {fileID: 11500000, guid: 7da701706a56406cbd5193888a52d049, type: 3}
+  m_Name: SO_Status_3_SuperFly
   m_EditorClassIdentifier: 
-  _id: 2
-  _viewKey: SpeedDown
+  _id: 3
+  _duration: -1
   _effects:
-  - _valueType: 0
-    _action: 1
-    _idValue: 2
-    _floatValue: 0
+  - _valueType: 2
+    _action: 0
+    _idValue: 0
+    _floatValue: 5
     _intValue: 0

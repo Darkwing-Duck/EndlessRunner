@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace Game.Configs
 {
 
-	public class RegistryOf<T> where T : IGameConfig
+	public class ConfigRegistryOf<T> where T : IGameConfig
 	{
 		private readonly Dictionary<uint, T> _configs;
 		private readonly IConfigsProvider _configsProvider;
 
-		public RegistryOf(IConfigsProvider provider)
+		public ConfigRegistryOf(IConfigsProvider provider)
 		{
 			_configs = new Dictionary<uint, T>();
 			_configsProvider = provider;
@@ -36,8 +36,6 @@ namespace Game.Configs
 			foreach (var config in result) {
 				Add(config);
 			}
-			
-			return ;
 		}
 
 		public IEnumerable<T> GetAll()

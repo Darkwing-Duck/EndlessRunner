@@ -1,3 +1,5 @@
+using Game.Configs;
+
 namespace Game.Engine
 {
 
@@ -19,7 +21,7 @@ namespace Game.Engine
 		
 		public class Executor : CommandExecutor<CreateHeroCommand>
 		{
-			public Executor(World world, CommandCenter commandCenter) : base(world, commandCenter) { }
+			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }
 
 			public override CmdResult Execute(CreateHeroCommand command)
 			{

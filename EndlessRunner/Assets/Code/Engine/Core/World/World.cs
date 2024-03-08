@@ -7,7 +7,7 @@ namespace Game.Engine
 
 		public World(IElementUidGenerator uidGenerator)
 		{
-			Elements = new ElementsRegistry(uidGenerator);
+			Elements = new (uidGenerator);
 		}
 	}
 

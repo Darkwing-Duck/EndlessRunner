@@ -1,35 +1,45 @@
+using Game.Configs;
+
 namespace Game.Engine
 {
 	
 	public class AddStatModifierCommand<T> : ICommand where T : Stat
 	{
-		public readonly uint ElementId;
+		public readonly uint ElementUid;
 		public readonly StatModifier Modifier;
 
-		public AddStatModifierCommand(uint elementId, StatModifier modifier)
+		public AddStatModifierCommand(uint elementUid, StatModifier modifier)
 		{
-			ElementId = elementId;
+			ElementUid = elementUid;
 			Modifier = modifier;
+		}
+		
+		public class Result<TStat> : CmdResult where TStat : Stat
+		{
+			public uint TargetUid { get; internal set; }
 		}
 		
 		public class Executor : CommandExecutor<AddStatModifierCommand<T>>
 		{
-			public Executor(World world, CommandCenter commandCenter) : base(world, commandCenter) { }
+			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }
 
 			public override CmdResult Execute(AddStatModifierCommand<T> command)
 			{
-				if (!World.Elements.TryFind(command.ElementId, out var element)) {
-					return CmdResult.FailedWith($"Can't find element '{command.ElementId}'.");
+				if (!World.Elements.TryFind(command.ElementUid, out var element)) {
+					return CmdResult.FailedWith($"Can't find element '{command.ElementUid}'.");
 				}
 				
 				if (!element.Stats.TryFind<T>(out var targetStat)) {
 					var type = typeof(T);
-					return CmdResult.FailedWith($"Can't find stat '{type.Name}' on element '{command.ElementId}'.");
+					return CmdResult.FailedWith($"Can't find stat '{type.Name}' on element '{command.ElementUid}'.");
 				}
 				
 				targetStat.AddModifier(command.Modifier);
-				
-				return CmdResult.Ok;
+
+				return new Result<T> {
+					Status = CmdStatus.Ok,
+					TargetUid = element.Uid
+				};
 			}
 		}
 	}

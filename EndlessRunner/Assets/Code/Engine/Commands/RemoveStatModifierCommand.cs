@@ -1,20 +1,27 @@
+using Game.Configs;
+
 namespace Game.Engine
 {
 
 	public class RemoveStatModifierCommand<T> : ICommand where T : Stat
 	{
 		public readonly uint ElementId;
-		public readonly StatModifier Modifier;
+		public readonly IStatModifier Modifier;
 
-		public RemoveStatModifierCommand(uint elementId, StatModifier modifier)
+		public RemoveStatModifierCommand(uint elementId, IStatModifier modifier)
 		{
 			ElementId = elementId;
 			Modifier = modifier;
 		}
 		
+		public class Result<TStat> : CmdResult where TStat : Stat
+		{
+			public uint TargetUid { get; internal set; }
+		}
+		
 		public class Executor : CommandExecutor<RemoveStatModifierCommand<T>>
 		{
-			public Executor(World world, CommandCenter commandCenter) : base(world, commandCenter) { }
+			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }
 
 			public override CmdResult Execute(RemoveStatModifierCommand<T> command)
 			{
@@ -28,8 +35,11 @@ namespace Game.Engine
 				}
 				
 				targetStat.RemoveModifier(command.Modifier);
-				
-				return CmdResult.Ok;
+
+				return new Result<T> {
+					Status = CmdStatus.Ok,
+					TargetUid = element.Uid
+				};
 			}
 		}
 	}

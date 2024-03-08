@@ -1,4 +1,5 @@
 using System;
+using Game.Configs;
 
 namespace Game.Engine
 {
@@ -12,11 +13,13 @@ namespace Game.Engine
 	{
 		protected readonly World World;
 		protected readonly CommandCenter CommandCenter;
+		protected readonly ConfigsRegistry Configs;
 
-		protected CommandExecutor(World world, CommandCenter commandCenter)
+		protected CommandExecutor(World world, CommandCenter commandCenter, ConfigsRegistry configs)
 		{
 			World = world;
 			CommandCenter = commandCenter;
+			Configs = configs;
 		}
 
 		CmdResult ICommandExecutor<TCommand>.Execute(ICommand command)

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Game.Common;
+using Game.Configs;
 using Utils;
 
 namespace Game.Engine
@@ -11,13 +12,13 @@ namespace Game.Engine
 		public readonly World World;
 		
 		private readonly CommandCenter _commandCenter;
-		private readonly ElementUidGenerator _uidGenerator;
+		private readonly ConfigsRegistry _configsRegistry;
 
-		public GameEngine()
+		public GameEngine(ConfigsRegistry configsRegistry)
 		{
 			World = new World(new ElementUidGenerator());
-			_uidGenerator = new ElementUidGenerator();
-			_commandCenter = new CommandCenter(_uidGenerator);
+			_commandCenter = new CommandCenter();
+			_configsRegistry = configsRegistry;
 
 			InitializeCommandCenter();
 		}
@@ -40,10 +41,13 @@ namespace Game.Engine
 		private void RegisterComplicatedExecutors()
 		{
 			// register stat modifiers executors
-			_commandCenter.RegisterExecutor(new AddStatModifierCommand<GameStat.Speed>.Executor(World, _commandCenter));
-			_commandCenter.RegisterExecutor(new RemoveStatModifierCommand<GameStat.Speed>.Executor(World, _commandCenter));
+			_commandCenter.RegisterExecutor(new AddStatModifierCommand<GameStat.Speed>.Executor(World, _commandCenter, _configsRegistry));
+			_commandCenter.RegisterExecutor(new RemoveStatModifierCommand<GameStat.Speed>.Executor(World, _commandCenter, _configsRegistry));
 		}
 
+		/// <summary>
+		/// Collects and registers all the simple executors automatically through the reflection 
+		/// </summary>
 		private void RegisterSimpleExecutors()
 		{
 			var assemblies = AppDomain.CurrentDomain.GetUserDefinedAssemblies();
@@ -67,7 +71,7 @@ namespace Game.Engine
 						continue;
 					}
 					
-					var instance = (ICommandExecutor<ICommand>)Activator.CreateInstance(type, new object[] { World, _commandCenter });
+					var instance = (ICommandExecutor<ICommand>)Activator.CreateInstance(type, new object[] { World, _commandCenter, _configsRegistry });
 					_commandCenter.RegisterExecutor(commandType, instance);
 				}
 			}
@@ -88,6 +92,7 @@ namespace Game.Engine
 		/// </summary>
 		public void Update()
 		{
+			UpdateStatuses();
 			_commandCenter.Update();
 		}
 
@@ -96,6 +101,22 @@ namespace Game.Engine
 
 		public void UnregisterReaction<T>(IEngineReactionOn<T> reaction) where T : CmdResult =>
 			_commandCenter.UnregisterReaction(reaction);
+
+		private void UpdateStatuses()
+		{
+			World.Elements.ForEach(element => {
+				foreach (var status in element.Statuses.GetAll()) {
+					if (status.IsPersistent)
+						continue;
+					
+					status.Timer.Update();
+
+					if (status.Timer.IsFinished) {
+						_commandCenter.Enqueue(new RemoveStatusCommand(element.Uid, status.Uid));
+					}
+				}
+			});
+		}
 	}
 
 }

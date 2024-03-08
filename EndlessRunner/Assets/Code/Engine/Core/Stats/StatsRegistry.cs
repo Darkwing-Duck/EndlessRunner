@@ -8,7 +8,7 @@ namespace Game.Engine
 	{
 		private readonly Dictionary<Type, Stat> _stats = new();
 
-		public Stat Register<T>(float withValue) where T : Stat
+		public Stat Register<T>(float withValue, float min = 0f, float max = float.MaxValue) where T : Stat
 		{
 			var type = typeof(T);
 
