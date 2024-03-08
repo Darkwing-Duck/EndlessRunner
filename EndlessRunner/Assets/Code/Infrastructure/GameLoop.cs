@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.Configs;
 using Game.Engine;
 using Game.Presentation;
@@ -11,6 +12,7 @@ namespace Game.Infrastructure
 	{
 		private PresentationRoot _presentation;
 		private GameEngine _engine;
+		private List<PlayerInput> _players = new ();
 		
 		private async void Awake()
 		{
@@ -34,13 +36,24 @@ namespace Game.Infrastructure
 			var levelPresenter = new LevelPresenter(levelConfig);
 			_presentation.Add(levelPresenter);
 
-			var heroConfig = configsRegistry.Heroes.Get(1);
+			var heroGranny = configsRegistry.Heroes.Get(1);
+			var heroOrtiz = configsRegistry.Heroes.Get(2);
+
+			var heroActionsMapper = new HeroActionsMapper(_engine);
+			var localPlayer = new LocalPlayerInput(1, heroActionsMapper);
+			var aiPlayer = new AIPlayerInput(2, heroActionsMapper);
 			
-			_engine.Push(new CreateHeroCommand(heroConfig.Id, heroConfig.Speed));
+			_players.Add(localPlayer);
+			_players.Add(aiPlayer);
+
+			// _engine.Push(new CreateHeroCommand(heroOrtiz.Id, heroOrtiz.Speed, aiPlayer.PlayerId));
+			_engine.Push(new CreateHeroCommand(heroGranny.Id, heroGranny.Speed, localPlayer.PlayerId));
+
+			// var heroActionsMapper = new HeroActionsMapper()
 			
-			_engine.Push(new CreateCollectibleCommand(1));
-			// _engine.Push(new CreateCollectibleCommand(2));
-			// _engine.Push(new CreateCollectibleCommand(3));
+			// GameInstance.Create()
+			//             .WithLevel(2)
+			//             .WithPlayer(new (1,), 1);
 		}
 
 		/// <summary>
@@ -53,6 +66,8 @@ namespace Game.Infrastructure
 			engine.RegisterReaction(new EngineReactionOn<DestroyCollectibleCommand.Result>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<AddStatusCommand.Result>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<RemoveStatusCommand.Result>(listenersProvider));
+			engine.RegisterReaction(new EngineReactionOn<SetHeroStateCommand.Result>(listenersProvider));
+			engine.RegisterReaction(new EngineReactionOn<HeroJumpCommand.Result>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<AddStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<RemoveStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>(listenersProvider));
 		}
@@ -61,6 +76,8 @@ namespace Game.Infrastructure
 		{
 			_engine?.Update();
 			_presentation?.Update();
+			
+			_players.ForEach(p => p.Update());
 		}
 	}
 

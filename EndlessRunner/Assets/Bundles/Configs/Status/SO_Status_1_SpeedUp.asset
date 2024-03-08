@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: SO_Status_1_SpeedUp
   m_EditorClassIdentifier: 
   _id: 1
-  _duration: 120
+  _duration: 600
   _effects:
   - _valueType: 2
     _action: 0
     _idValue: 0
-    _floatValue: 5
+    _floatValue: 2
     _intValue: 0
+    _stateValue: 0

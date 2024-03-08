@@ -1,3 +1,4 @@
+using System;
 using Game.Engine;
 using Game.Presentation.View;
 using UnityEngine;
@@ -17,9 +18,9 @@ namespace Game.Presentation
 			Hero.View.Animator.SetTrigger(_run);
 		}
 
-		public override void OnDeactivate()
+		public override void OnDeactivate(Action callback)
 		{
-			
+			callback?.Invoke();
 		}
 
 		public override void Update()

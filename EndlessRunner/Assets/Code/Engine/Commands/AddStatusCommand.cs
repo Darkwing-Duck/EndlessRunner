@@ -17,6 +17,7 @@ namespace Game.Engine
 		
 		public class Result : CmdResult
 		{
+			public uint TargetUid { get; internal set; }
 			public uint AddedStatusUid { get; internal set; }
 		}
 		
@@ -43,6 +44,7 @@ namespace Game.Engine
 				
 				return new Result {
 					Status = CmdStatus.Ok,
+					TargetUid = target.Uid,
 					AddedStatusUid = statusUid
 				};
 			}

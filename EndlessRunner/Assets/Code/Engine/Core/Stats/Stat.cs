@@ -33,9 +33,11 @@ namespace Game.Engine
 		/// <summary>
 		/// Calculates and returns actual stat value taking in account all modifiers 
 		/// </summary>
-		public float GetValue() =>
-			_modifiers
-				.Aggregate(BaseValue, (current, modifier) => modifier.Modify(current));
+		public float GetValue()
+		{
+			var result = _modifiers.Aggregate(BaseValue, (current, modifier) => modifier.Modify(current));
+			return Mathf.Clamp(result, Min, Max);
+		}
 	}
 
 }

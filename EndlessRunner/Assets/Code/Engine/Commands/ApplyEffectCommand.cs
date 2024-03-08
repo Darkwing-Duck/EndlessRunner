@@ -41,6 +41,7 @@ namespace Game.Engine
 
 					EffectAction.AddStatus => new AddStatusCommand(command.TargetUid, command.Effect.IdValue),
 					EffectAction.RemoveStatus => new RemoveStatusCommand(command.TargetUid, command.Effect.IdValue),
+					EffectAction.SetState => new SetHeroStateCommand(command.TargetUid, command.Effect.StateValue),
 					_ => throw new ArgumentOutOfRangeException()
 				};
 		}

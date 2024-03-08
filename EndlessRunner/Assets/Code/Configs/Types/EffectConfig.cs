@@ -8,12 +8,18 @@ namespace Game.Configs
 	{
 		ModifySpeed = 0,
 		AddStatus,
-		RemoveStatus
+		RemoveStatus,
+		SetState
 	}
 	
 	public enum EffectValueType
 	{
-		Id = 0, Int, Float
+		Id = 0, Int, Float, State
+	}
+	
+	public enum HeroStateType
+	{
+		Run, SuperFly
 	}
 	
 	[Serializable]
@@ -34,6 +40,9 @@ namespace Game.Configs
 		
 		[SerializeField]
 		private int _intValue;
+		
+		[SerializeField]
+		private HeroStateType _stateValue;
 
 		public EffectValueType ValueType => _valueType;
 		public EffectAction Action => _action;
@@ -41,6 +50,7 @@ namespace Game.Configs
 		public float FloatValue => _floatValue;
 		public int IntValue => _intValue;
 		public uint IdValue => _idValue;
+		public HeroStateType StateValue => _stateValue;
 	}
 
 }

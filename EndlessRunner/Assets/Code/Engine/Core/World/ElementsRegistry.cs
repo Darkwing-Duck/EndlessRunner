@@ -78,6 +78,19 @@ namespace Game.Engine
 			result = (TElement)_elements[id];
 			return true;
 		}
+		
+		public bool TryFind<TElement>(Predicate<TElement> match, out TElement result) where TElement : Element
+		{
+			foreach (var element in _elements.Values) {
+				if (element is TElement casted && match(casted)) {
+					result = casted;
+					return true;
+				}
+			}
+
+			result = default;
+			return false;
+		}
 
 		public void ForEach(Action<Element> callback)
 		{

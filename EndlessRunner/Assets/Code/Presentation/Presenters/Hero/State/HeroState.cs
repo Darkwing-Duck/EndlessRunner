@@ -1,5 +1,5 @@
+using System;
 using Game.Common;
-using Game.Presentation.View;
 
 namespace Game.Presentation
 {
@@ -11,7 +11,7 @@ namespace Game.Presentation
 		protected HeroState(HeroPresenter hero) => Hero = hero;
 
 		public abstract void OnActivate();
-		public abstract void OnDeactivate();
+		public abstract void OnDeactivate(Action callback);
 
 		public virtual void Update()
 		{ }

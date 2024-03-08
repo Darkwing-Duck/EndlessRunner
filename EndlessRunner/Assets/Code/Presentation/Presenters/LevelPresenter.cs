@@ -14,6 +14,9 @@ namespace Game.Presentation
 		, IListener<DestroyCollectibleCommand.Result>
 		, IUpdatable
 	{
+		private float _collectibleSpawnRate = 15f; // sec
+		private float _elapsedTime;
+		
 		public LevelPresenter(LevelConfig model) : base(model, model) { }
 		protected override string InitializeViewKey() => Model.ViewKey;
 		protected override string InitializeViewGroup() => "Level";
@@ -34,6 +37,18 @@ namespace Game.Presentation
 
 			// update camera position
 			View.Camera.transform.position = _followTarget.View.transform.position;
+
+			TryToGenerateCollectible();
+		}
+
+		private void TryToGenerateCollectible()
+		{
+			_elapsedTime += Time.deltaTime;
+
+			if (_elapsedTime >= _collectibleSpawnRate) {
+				_elapsedTime = 0f;
+				EngineInput.Push(new GenerateRandomCollectible());
+			}
 		}
 
 		/// <summary>
@@ -85,7 +100,10 @@ namespace Game.Presentation
 			// add presenter to presentation root to be displayed on screen
 			Root.Add(collectiblePresenter);
 
-			var pos = new Vector3(5f * cmdResult.CollectibleUid, 1.5f, 0f);
+			var cameraPosition = View.Camera.transform.position;
+			var newCollectiblePosition = cameraPosition.x + 20f;
+
+			var pos = new Vector3(newCollectiblePosition, 1.5f, 0f);
 			collectiblePresenter.View.transform.localPosition = pos;
 		}
 

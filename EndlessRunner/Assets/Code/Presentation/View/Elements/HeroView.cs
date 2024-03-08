@@ -18,17 +18,43 @@ namespace Game.Presentation.View
 		public Animator Animator => _animator;
 
 		private float _speed;
+		private float _targetSpeed;
+		private bool _jumpAction;
+
+		private const float JumpForce = 100f;
 
 		public void SetSpeed(float speed)
 		{
+			_targetSpeed = speed;
 			_speed = speed;
-			_rigidbody.velocity = Vector3.right * speed;
+			_rigidbody.velocity = Vector3.right * _speed;
+		}
+		
+		public void Jump()
+		{
+			_jumpAction = true;
+		}
+		
+		public void SetGravityActive(bool value)
+		{
+			_rigidbody.useGravity = value;
+		}
+
+		private void Update()
+		{
+			_speed = Mathf.Lerp(_speed, _targetSpeed, Time.deltaTime * 5f);
 		}
 
 		private void FixedUpdate()
 		{
-			var moveVector = Vector3.right * _speed * Time.fixedDeltaTime; 
-			_rigidbody.MovePosition(_rigidbody.position + moveVector);
+			if (_jumpAction) {
+				_jumpAction = false;
+				_rigidbody.AddForce(Vector3.up * JumpForce);
+			}
+			
+			var position = _rigidbody.position;
+			position.x += _speed * Time.fixedDeltaTime;
+			_rigidbody.position = position;
 		}
 
 		private void OnTriggerEnter(Collider other)

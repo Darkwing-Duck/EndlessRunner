@@ -14,6 +14,8 @@ namespace Game.Engine
 		public bool TryGet(uint id, out T value) => _map.TryGetValue(id, out value);
 
 		public IEnumerable<T> GetAll() { return _map.Values; }
+
+		public int Count => _map.Count;
 	}
 
 }

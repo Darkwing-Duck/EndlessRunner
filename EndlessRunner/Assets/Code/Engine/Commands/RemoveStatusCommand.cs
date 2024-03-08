@@ -16,7 +16,9 @@ namespace Game.Engine
 		
 		public class Result : CmdResult
 		{
+			public uint TargetUid { get; internal set; }
 			public uint RemovedStatusUid { get; internal set; }
+			public uint RemovedStatusConfigId { get; internal set; }
 		}
 		
 		public class Executor : CommandExecutor<RemoveStatusCommand>
@@ -52,7 +54,9 @@ namespace Game.Engine
 				
 				return new Result {
 					Status = CmdStatus.Ok,
-					RemovedStatusUid = command.StatusUid
+					TargetUid = target.Uid,
+					RemovedStatusUid = command.StatusUid,
+					RemovedStatusConfigId = status.ConfigId
 				};
 			}
 		}
