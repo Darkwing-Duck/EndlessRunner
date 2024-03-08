@@ -62,6 +62,10 @@ namespace Game.Presentation
 		/// </summary>
 		public void On(AddStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed> cmdResult)
 		{
+			// check if the modification related to this hero
+			if (cmdResult.TargetUid != Model.Uid)
+				return;
+			
 			UpdateSpeed();
 		}
 
@@ -70,6 +74,9 @@ namespace Game.Presentation
 		/// </summary>
 		public void On(RemoveStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed> cmdResult)
 		{
+			if (cmdResult.TargetUid != Model.Uid)
+				return;
+			
 			UpdateSpeed();
 		}
 	}
