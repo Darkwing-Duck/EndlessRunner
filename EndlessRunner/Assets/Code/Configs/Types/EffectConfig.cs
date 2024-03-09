@@ -19,7 +19,7 @@ namespace Game.Configs
 	
 	public enum HeroStateType
 	{
-		Run, SuperFly
+		Run, SuperFly, Jump
 	}
 	
 	[Serializable]

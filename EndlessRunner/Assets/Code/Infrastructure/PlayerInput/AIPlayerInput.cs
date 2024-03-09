@@ -5,7 +5,7 @@ namespace Game.Infrastructure
 
 	public class AIPlayerInput : PlayerInput
 	{
-		private const float _aiJumpRate = 4f;
+		private float _nextJumpIn = 4f; // sec
 		private float _elapsedTime;
 		
 		public AIPlayerInput(uint playerId, IHeroActionsMapper heroActionsMapper) : base(playerId, heroActionsMapper) { }
@@ -14,8 +14,9 @@ namespace Game.Infrastructure
 		{
 			_elapsedTime += Time.deltaTime;
 
-			if (_elapsedTime >= _aiJumpRate) {
+			if (_elapsedTime >= _nextJumpIn) {
 				_elapsedTime = 0f;
+				_nextJumpIn = Random.Range(2f, 6f);
 				ActionsMapper.Jump(PlayerId);
 			}
 		}

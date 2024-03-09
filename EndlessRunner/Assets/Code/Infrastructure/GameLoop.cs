@@ -46,14 +46,16 @@ namespace Game.Infrastructure
 			_players.Add(localPlayer);
 			_players.Add(aiPlayer);
 
-			// _engine.Push(new CreateHeroCommand(heroOrtiz.Id, heroOrtiz.Speed, aiPlayer.PlayerId));
+			_engine.Push(new CreateHeroCommand(heroOrtiz.Id, heroOrtiz.Speed, aiPlayer.PlayerId));
 			_engine.Push(new CreateHeroCommand(heroGranny.Id, heroGranny.Speed, localPlayer.PlayerId));
 
 			// var heroActionsMapper = new HeroActionsMapper()
 			
 			// GameInstance.Create()
 			//             .WithLevel(2)
-			//             .WithPlayer(new (1,), 1);
+			//             .WithConfigs(configsRegistry)
+			//             .WithPlayer(AIPlayerInput, 2);
+			//             .WithPlayer(localPlayer, 1);
 		}
 
 		/// <summary>
@@ -68,6 +70,7 @@ namespace Game.Infrastructure
 			engine.RegisterReaction(new EngineReactionOn<RemoveStatusCommand.Result>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<SetHeroStateCommand.Result>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<HeroJumpCommand.Result>(listenersProvider));
+			engine.RegisterReaction(new EngineReactionOn<HeroLandCommand.Result>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<AddStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>(listenersProvider));
 			engine.RegisterReaction(new EngineReactionOn<RemoveStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>(listenersProvider));
 		}

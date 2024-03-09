@@ -21,12 +21,16 @@ namespace Game.Presentation
 
 		public override void OnDeactivate(Action callback)
 		{
-			Hero.View.Animator.SetTrigger(_land);
 			Hero.View.SetGravityActive(true);
-			Hero.View.transform.DOMoveY(0f, 0.5f)
-			    .OnComplete(() => {
-				    callback?.Invoke();
-			    });
+			Hero.View.Animator.SetTrigger(_land);
+			
+			DOVirtual.DelayedCall(0.5f, () => {
+				callback?.Invoke();
+			});
+			     // Hero.View.transform.DOMoveY(0f, 0.5f)
+			     // .OnComplete(() => {
+				    //
+			     // });
 			
 		}
 	}

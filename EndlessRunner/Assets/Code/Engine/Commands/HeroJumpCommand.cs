@@ -28,11 +28,11 @@ namespace Game.Engine
 					return CmdResult.FailedWith("Hero can jump only while running.");
 				}
 				
-				if (hero.IsInJump) {
+				if (hero.State == HeroStateType.Jump) {
 					return CmdResult.FailedWith("Hero is already in jump.");
 				}
-
-				hero.IsInJump = true;
+				
+				hero.State = HeroStateType.Jump;
 				
 				return new Result {
 					Status = CmdStatus.Ok,

@@ -15,6 +15,7 @@ namespace Game.Presentation
 		, IListener<SetHeroStateCommand.Result>
 		, IListener<RemoveStatusCommand.Result>
 		, IListener<HeroJumpCommand.Result>
+		, IListener<HeroLandCommand.Result>
 	{
 		private Dictionary<HeroStateType, HeroState> _statesMap;
 		private HeroState _heroState;
@@ -26,7 +27,8 @@ namespace Game.Presentation
 			// initialize states map
 			_statesMap = new Dictionary<HeroStateType, HeroState> {
 				{ HeroStateType.Run, new RunningState(this) },
-				{ HeroStateType.SuperFly, new SuperFlyState(this) }
+				{ HeroStateType.SuperFly, new SuperFlyState(this) },
+				{ HeroStateType.Jump, new JumpState(this) }
 			};
 		}
 
@@ -53,6 +55,7 @@ namespace Game.Presentation
 			View.SetSpeed(speedStat.GetValue());
 
 			View.OnCollideWith += OnCollideWith;
+			View.OnLanded += OnLanded;
 		}
 
 		/// <summary>
@@ -62,6 +65,11 @@ namespace Game.Presentation
 		private void OnCollideWith(ElementUidRef elementUid)
 		{
 			EngineInput.Push(new HeroCollectItemCommand(Model.Uid, elementUid.Value));
+		}
+		
+		private void OnLanded()
+		{
+			EngineInput.Push(new HeroLandCommand(Model.Uid));
 		}
 
 		protected override void OnDeactivate()
@@ -164,7 +172,18 @@ namespace Game.Presentation
 			if (cmdResult.HeroUid != Model.Uid)
 				return;
 
-			View.Jump();
+			ChangeStateTo(HeroStateType.Jump);
+		}
+
+		public void On(HeroLandCommand.Result cmdResult)
+		{
+			if (cmdResult.Status == CmdStatus.Failed)
+				return;
+			
+			if (cmdResult.HeroUid != Model.Uid)
+				return;
+			
+			ChangeStateTo(HeroStateType.Run);
 		}
 	}
 

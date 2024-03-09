@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using Code.Presentation.View;
 using Game.Common;
 using Game.Configs;
 using Game.Engine;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Presentation
 {
@@ -14,14 +16,20 @@ namespace Game.Presentation
 		, IListener<DestroyCollectibleCommand.Result>
 		, IUpdatable
 	{
-		private float _collectibleSpawnRate = 15f; // sec
+		private const float CollectibleSpawnRate = 15f; // sec
+		private const float CollectibleSpawnDistance = 15f;
 		private float _elapsedTime;
+		
+		private List<float> _collectibleYPos = new List<float> {
+			1.5f, 3f
+		};
 		
 		public LevelPresenter(LevelConfig model) : base(model, model) { }
 		protected override string InitializeViewKey() => Model.ViewKey;
 		protected override string InitializeViewGroup() => "Level";
 		
 		private HeroPresenter _followTarget;
+		private float _targetZ;
 
 		protected override void OnActivate()
 		{
@@ -36,7 +44,15 @@ namespace Game.Presentation
 			GenerateLevel();
 
 			// update camera position
-			View.Camera.transform.position = _followTarget.View.transform.position;
+			// View.Camera.transform.position = _followTarget.View.transform.position;
+
+			var speedStat = _followTarget.Model.Stats.Find<GameStat.Speed>();
+			var targetHeroSpeed = speedStat.GetValue() - 3f;
+			var newCameraPosition = _followTarget.View.transform.position;
+			_targetZ = Mathf.Lerp(-4f,2f , 1f - targetHeroSpeed / 5f);
+			newCameraPosition.z = Mathf.Lerp(View.Camera.transform.position.z, _targetZ, Time.deltaTime * 7f);
+
+			View.Camera.transform.position = newCameraPosition;
 
 			TryToGenerateCollectible();
 		}
@@ -45,7 +61,7 @@ namespace Game.Presentation
 		{
 			_elapsedTime += Time.deltaTime;
 
-			if (_elapsedTime >= _collectibleSpawnRate) {
+			if (_elapsedTime >= CollectibleSpawnRate) {
 				_elapsedTime = 0f;
 				EngineInput.Push(new GenerateRandomCollectible());
 			}
@@ -101,9 +117,11 @@ namespace Game.Presentation
 			Root.Add(collectiblePresenter);
 
 			var cameraPosition = View.Camera.transform.position;
-			var newCollectiblePosition = cameraPosition.x + 20f;
+			var newCollectiblePosition = cameraPosition.x + CollectibleSpawnDistance;
+			var posYIndex = Random.Range(0, _collectibleYPos.Count);
+			var positionY = _collectibleYPos[posYIndex];
 
-			var pos = new Vector3(newCollectiblePosition, 1.5f, 0f);
+			var pos = new Vector3(newCollectiblePosition, positionY, 0f);
 			collectiblePresenter.View.transform.localPosition = pos;
 		}
 

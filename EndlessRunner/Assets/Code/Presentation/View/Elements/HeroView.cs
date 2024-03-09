@@ -8,6 +8,7 @@ namespace Game.Presentation.View
 	public class HeroView : ElementView
 	{
 		public event Action<ElementUidRef> OnCollideWith; 
+		public event Action OnLanded; 
 		
 		[SerializeField]
 		private Rigidbody _rigidbody;
@@ -21,7 +22,7 @@ namespace Game.Presentation.View
 		private float _targetSpeed;
 		private bool _jumpAction;
 
-		private const float JumpForce = 100f;
+		private const float JumpForce = 120f;
 
 		public void SetSpeed(float speed)
 		{
@@ -62,6 +63,11 @@ namespace Game.Presentation.View
 			if (other.TryGetComponent<ElementUidRef>(out var component)) {
 				OnCollideWith?.Invoke(component);
 			}
+		}
+
+		private void OnCollisionEnter(Collision other)
+		{
+			OnLanded?.Invoke();
 		}
 
 		private void OnDestroy()
