@@ -9,7 +9,7 @@ namespace Game.Infrastructure
 	/// <summary>
 	/// Game entry point
 	/// </summary>
-	public class ConstructionRoot : MonoBehaviour
+	public class CompositionRoot : MonoBehaviour
 	{
 		private readonly List<PlayerInput> _players = new ();
 		private GameInstance _game;
@@ -36,12 +36,13 @@ namespace Game.Infrastructure
 			var grannyHeroId = 1u;
 			var ortizHeroId = 2u;
 
-			// create the game
 			_game = GameInstance.Create(configsRegistry)
 			                    .WithLevel(levelConfigId)
 			                    .WithHero(grannyHeroId, localPlayerId)
 			                    .WithHero(ortizHeroId, aiPlayerId);
-			
+
+			// create the game
+
 			// create inputs for 2 players: local and AI 
 			var heroActionsMapper = new HeroActionsMapper(_game.Input);
 			var localPlayer = new LocalPlayerInput(localPlayerId, heroActionsMapper);

@@ -7,6 +7,10 @@ using Game.Presentation;
 namespace Game.Infrastructure
 {
 
+	/// <summary>
+	/// The root class of the game instance.
+	/// Initializes the game and updates it
+	/// </summary>
 	public class GameInstance : IUpdatable
 	{
 		private readonly GameEngine _engine;
@@ -14,7 +18,15 @@ namespace Game.Infrastructure
 		private readonly List<PlayerInput> _players;
 		private readonly ConfigsRegistry _configsRegistry;
 
+		/// <summary>
+		/// Provides interface to push commands ot the game.
+		/// The only way to make changes to the game state from outside
+		/// </summary>
 		public IEngineInput Input => _engine;
+		
+		/// <summary>
+		/// Provides access to presentation root where you can look for presenters from outside
+		/// </summary>
 		public PresentationRoot Presentation => _presentation;
 
 		private GameInstance(ConfigsRegistry configsRegistry)
@@ -32,8 +44,14 @@ namespace Game.Infrastructure
 			_presentation.Update();
 		}
 
+		/// <summary>
+		/// The only way to create GameInstance using declarative Builder pattern
+		/// </summary>
 		public static GameInstance Create(ConfigsRegistry configsRegistry) => new (configsRegistry);
 		
+		/// <summary>
+		/// Creates Level by specified configId
+		/// </summary>
 		public GameInstance WithLevel(uint levelConfigId)
 		{
 			var levelConfig = _configsRegistry.Levels.Get(levelConfigId);
@@ -42,6 +60,11 @@ namespace Game.Infrastructure
 			return this;
 		}
 		
+		/// <summary>
+		/// Creates hero with specified config Id for certain playerId
+		/// </summary>
+		/// <param name="heroConfigId">Hero config Id</param>
+		/// <param name="forPlayerId">Player Id</param>
 		public GameInstance WithHero(uint heroConfigId, uint forPlayerId)
 		{
 			var heroConfig = _configsRegistry.Heroes.Get(heroConfigId);

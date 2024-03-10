@@ -9,10 +9,19 @@ using UnityEngine.AddressableAssets;
 namespace Game.Infrastructure
 {
 
+	/// <summary>
+	/// Provides config files from addressables
+	/// </summary>
 	public class AddressableConfigsProvider : IConfigsProvider
 	{
+		/// <summary>
+		/// Regex pattern to find all the config files with .asset extension 
+		/// </summary>
 		private const string _regexPattern = @"\/(.+.asset)";
-		
+
+		/// <summary>
+		/// Loads all configs in specified path. 
+		/// </summary>
 		public async Task<TConfig[]> GetAllInPathAsync<TConfig>(string path) where TConfig : IGameConfig
 		{
 			path = path.Replace("/", "\\/");
@@ -20,13 +29,15 @@ namespace Game.Infrastructure
 			var regex = new Regex(regexPattern);
 			var keys = GetConfigsKeys(regex);
 
-			var handle = Addressables.LoadAssetsAsync<TConfig>((IEnumerable)keys, asset => {
-			}, Addressables.MergeMode.Union);
+			var handle = Addressables.LoadAssetsAsync<TConfig>((IEnumerable)keys, asset => { }, Addressables.MergeMode.Union);
 
 			var result = await handle.Task;
 			return result.ToArray();
 		}
-		
+
+		/// <summary>
+		/// Collects all the configs paths from addressables by matching Regex pattern.
+		/// </summary>
 		private string[] GetConfigsKeys(Regex regex)
 		{
 			var resultKeys = new List<string>();

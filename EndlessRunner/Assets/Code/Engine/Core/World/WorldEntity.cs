@@ -5,6 +5,8 @@ namespace Game.Engine
 	{
 		public readonly uint Uid;
 		public WorldEntity(uint uid) => Uid = uid;
+
+		internal virtual void Update() { }
 	}
 
 }

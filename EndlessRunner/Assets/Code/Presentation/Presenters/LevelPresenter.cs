@@ -101,8 +101,11 @@ namespace Game.Presentation
 			
 			// add presenter to presentation root to be displayed on screen
 			Root.Add(heroPresenter);
-			
-			SetActiveHero(heroPresenter);
+
+			// If it's the local player we need camera to follow him
+			if (cmdResult.PlayerId == 1) {
+				SetActiveHero(heroPresenter);
+			}
 		}
 
 		/// <summary>

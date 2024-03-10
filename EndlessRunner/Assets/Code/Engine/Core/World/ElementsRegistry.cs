@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Game.Common;
 
 namespace Game.Engine
 {
 
-	public class ElementsRegistry
+	public class ElementsRegistry : IUpdatable
 	{
 		private readonly Dictionary<uint, Element> _elements = new();
 		private readonly IElementUidGenerator _uidGenerator;
@@ -96,6 +97,13 @@ namespace Game.Engine
 		{
 			foreach (var element in _elements.Values) {
 				callback?.Invoke(element);
+			}
+		}
+
+		public void Update()
+		{
+			foreach (var element in _elements.Values) {
+				element.Update();
 			}
 		}
 	}

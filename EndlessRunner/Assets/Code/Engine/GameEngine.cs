@@ -92,7 +92,8 @@ namespace Game.Engine
 		/// </summary>
 		public void Update()
 		{
-			UpdateStatuses();
+			World.Update();
+			CheckStatusesCompletion();
 			_commandCenter.Update();
 		}
 
@@ -102,14 +103,15 @@ namespace Game.Engine
 		public void UnregisterReaction<T>(IEngineReactionOn<T> reaction) where T : CmdResult =>
 			_commandCenter.UnregisterReaction(reaction);
 
-		private void UpdateStatuses()
+		/// <summary>
+		/// If any of status completed we need to send RemoveStatusCommand
+		/// </summary>
+		private void CheckStatusesCompletion()
 		{
 			World.Elements.ForEach(element => {
 				foreach (var status in element.Statuses.GetAll()) {
 					if (status.IsPersistent)
 						continue;
-					
-					status.Timer.Update();
 
 					if (status.Timer.IsFinished) {
 						_commandCenter.Enqueue(new RemoveStatusCommand(element.Uid, status.Uid));
