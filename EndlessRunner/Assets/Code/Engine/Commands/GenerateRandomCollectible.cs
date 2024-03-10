@@ -5,22 +5,25 @@ using UnityEngine;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Generates random collectible
+	/// </summary>
 	public class GenerateRandomCollectible : ICommand
-	{ }
-
-	public class Executor : CommandExecutor<GenerateRandomCollectible>
 	{
-		public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }
-
-		public override CmdResult Execute(GenerateRandomCollectible command)
+		public class Executor : CommandExecutor<GenerateRandomCollectible>
 		{
-			var collectibleConfigs = Configs.Collectibles.GetAll().ToArray();
-			var randomIndex = Random.Range(0, collectibleConfigs.Count());
-			var randomConfig = collectibleConfigs[randomIndex];
-			
-			CommandCenter.Enqueue(new CreateCollectibleCommand(randomConfig.Id));
+			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }
 
-			return CmdResult.Ok;
+			public override CmdResult Execute(GenerateRandomCollectible command)
+			{
+				var collectibleConfigs = Configs.Collectibles.GetAll().ToArray();
+				var randomIndex = Random.Range(0, collectibleConfigs.Count());
+				var randomConfig = collectibleConfigs[randomIndex];
+			
+				CommandCenter.Enqueue(new CreateCollectibleCommand(randomConfig.Id));
+
+				return CmdResult.Ok;
+			}
 		}
 	}
 }

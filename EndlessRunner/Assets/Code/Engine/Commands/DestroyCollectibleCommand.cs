@@ -3,6 +3,9 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Destroys collectible
+	/// </summary>
 	public class DestroyCollectibleCommand : ICommand
 	{
 		public readonly uint CollectibleUid;

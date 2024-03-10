@@ -3,6 +3,9 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Creates new collectible
+	/// </summary>
 	public class CreateCollectibleCommand : ICommand
 	{
 		public readonly uint ConfigId;

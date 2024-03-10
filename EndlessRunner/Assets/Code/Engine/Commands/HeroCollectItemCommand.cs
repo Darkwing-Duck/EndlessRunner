@@ -3,6 +3,10 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Hero collect item command.
+	/// Applies effects specified in collectible configs to hero 'HeroUid'
+	/// </summary>
 	public class HeroCollectItemCommand : ICommand
 	{
 		public readonly uint HeroUid;

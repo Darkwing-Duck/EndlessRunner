@@ -3,6 +3,9 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Creates new hero
+	/// </summary>
 	public class CreateHeroCommand : ICommand
 	{
 		public readonly uint ConfigId;

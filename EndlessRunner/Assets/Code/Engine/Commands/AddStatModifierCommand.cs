@@ -3,6 +3,9 @@ using Game.Configs;
 namespace Game.Engine
 {
 	
+	/// <summary>
+	/// Adds stat modifier 'Modifier' of stat 'T' to the element 'ElementUid'
+	/// </summary>
 	public class AddStatModifierCommand<T> : ICommand where T : Stat
 	{
 		public readonly uint ElementUid;

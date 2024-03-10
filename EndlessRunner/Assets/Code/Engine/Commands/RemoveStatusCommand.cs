@@ -3,6 +3,10 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Remove status command.
+	/// Removes status 'StatusUid' from element 'TargetUid' 
+	/// </summary>
 	public class RemoveStatusCommand : ICommand
 	{
 		public readonly uint TargetUid;
@@ -21,6 +25,11 @@ namespace Game.Engine
 			public uint RemovedStatusConfigId { get; internal set; }
 		}
 		
+		/// <summary>
+		/// Remove status command executor
+		/// Removes specified status from specified element
+		/// Also removes all modifiers related to the status 
+		/// </summary>
 		public class Executor : CommandExecutor<RemoveStatusCommand>
 		{
 			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }

@@ -4,6 +4,9 @@ using Game.Engine.Core;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Adds the status 'ConfigId' to the element 'TargetUid'
+	/// </summary>
 	public class AddStatusCommand : ICommand
 	{
 		public readonly uint TargetUid;

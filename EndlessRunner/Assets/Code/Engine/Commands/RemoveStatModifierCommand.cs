@@ -2,7 +2,10 @@ using Game.Configs;
 
 namespace Game.Engine
 {
-
+	
+	/// <summary>
+	/// Removes modifier of specified type of stat 
+	/// </summary>
 	public class RemoveStatModifierCommand<T> : ICommand where T : Stat
 	{
 		public readonly uint ElementId;
@@ -14,11 +17,19 @@ namespace Game.Engine
 			Modifier = modifier;
 		}
 		
+		/// <summary>
+		/// Remove stat modifier command result
+		/// </summary>
+		/// <typeparam name="TStat"></typeparam>
 		public class Result<TStat> : CmdResult where TStat : Stat
 		{
 			public uint TargetUid { get; internal set; }
 		}
 		
+		/// <summary>
+		/// Remove stat modifier command executor
+		/// Removes modifier of specified type of stat 
+		/// </summary>
 		public class Executor : CommandExecutor<RemoveStatModifierCommand<T>>
 		{
 			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }

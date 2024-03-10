@@ -4,6 +4,9 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Applies specified effect 'Effect' to the element 'TargetUid'
+	/// </summary>
 	public class ApplyEffectCommand : ICommand
 	{
 		public readonly uint OwnerUid;

@@ -3,17 +3,27 @@ using Game.Configs;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Hero jump command
+	/// </summary>
 	public class HeroJumpCommand : ICommand
 	{
 		public readonly uint PlayerId;
 
 		public HeroJumpCommand(uint playerId) => PlayerId = playerId;
 		
+		/// <summary>
+		/// Hero jump command result
+		/// </summary>
 		public class Result : CmdResult
 		{
 			public uint HeroUid { get; internal set; }
 		}
 		
+		/// <summary>
+		/// Hero jump command executor.
+		/// Sets hero state to Jump
+		/// </summary>
 		public class Executor : CommandExecutor<HeroJumpCommand>
 		{
 			public Executor(World world, CommandCenter commandCenter, ConfigsRegistry configs) : base(world, commandCenter, configs) { }
