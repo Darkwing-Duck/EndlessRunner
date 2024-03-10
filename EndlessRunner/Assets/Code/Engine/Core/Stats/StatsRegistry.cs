@@ -4,6 +4,9 @@ using System.Collections.Generic;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Container for all stat modifiers for a stat
+	/// </summary>
 	public class StatsRegistry
 	{
 		private readonly Dictionary<Type, Stat> _stats = new();

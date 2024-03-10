@@ -1,35 +1,46 @@
 using System;
 using System.Collections.Generic;
-using Code.Presentation.View;
 using Game.Common;
 using Game.Configs;
 using Game.Engine;
+using Game.Presentation.View;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Displays level.
+	/// </summary>
 	public class LevelPresenter : PresenterWithModel<LevelConfig, LevelView>
 		, IListener<CreateHeroCommand.Result>
 		, IListener<CreateCollectibleCommand.Result>
 		, IListener<DestroyCollectibleCommand.Result>
 		, IUpdatable
 	{
+		// collectible item spawns every 15 seconds
 		private const float CollectibleSpawnRate = 15f; // sec
+		
+		// collectible item spawns at camera.position + 15 
 		private const float CollectibleSpawnDistance = 15f;
 		private float _elapsedTime;
 		
+		// hardcoded 2 collectible Y position to be spawned at
 		private List<float> _collectibleYPos = new List<float> {
 			1.5f, 3f
 		};
 		
 		public LevelPresenter(LevelConfig model) : base(model, model) { }
+		
 		protected override string InitializeViewKey() => Model.ViewKey;
 		protected override string InitializeViewGroup() => "Level";
 		
+		// hero to be followed by the camera 
 		private HeroPresenter _followTarget;
-		private float _targetZ;
+		
+		// target Z position of camera to be animated at by the time
+		private float _targetZPosition;
 
 		protected override void OnActivate()
 		{
@@ -41,22 +52,23 @@ namespace Game.Presentation
 			if (_followTarget is null)
 				return;
 
+			// generates endless level
 			GenerateLevel();
 
-			// update camera position
-			// View.Camera.transform.position = _followTarget.View.transform.position;
-
+			// calculates new camera position by Z depend on hero speed to make some effects of zoom in/out
 			var speedStat = _followTarget.Model.Stats.Find<GameStat.Speed>();
 			var targetHeroSpeed = speedStat.GetValue() - 3f;
 			var newCameraPosition = _followTarget.View.transform.position;
-			_targetZ = Mathf.Lerp(-4f,2f , 1f - targetHeroSpeed / 5f);
-			newCameraPosition.z = Mathf.Lerp(View.Camera.transform.position.z, _targetZ, Time.deltaTime * 7f);
+			_targetZPosition = Mathf.Lerp(-4f,2f , 1f - targetHeroSpeed / 5f);
+			newCameraPosition.z = Mathf.Lerp(View.Camera.transform.position.z, _targetZPosition, Time.deltaTime * 7f);
 
+			// update camera position
 			View.Camera.transform.position = newCameraPosition;
 
 			TryToGenerateCollectible();
 		}
 
+		// Determines when and generates collectibles
 		private void TryToGenerateCollectible()
 		{
 			_elapsedTime += Time.deltaTime;

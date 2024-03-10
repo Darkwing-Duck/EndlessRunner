@@ -1,6 +1,10 @@
 namespace Game.Engine.Core
 {
 
+	/// <summary>
+	/// Describes a status applied to element.
+	/// And timer update logic
+	/// </summary>
 	public class Status : WorldEntityWithConfig
 	{
 		internal readonly WorldTimer Timer;

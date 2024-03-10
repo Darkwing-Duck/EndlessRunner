@@ -5,6 +5,10 @@ using Game.Common;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// A container to store elements.
+	/// Provides ability to find elements.
+	/// </summary>
 	public class ElementsRegistry : IUpdatable
 	{
 		private readonly Dictionary<uint, Element> _elements = new();

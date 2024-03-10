@@ -8,6 +8,9 @@ using UnityEngine;
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Displays hero.
+	/// </summary>
 	public class HeroPresenter : ElementPresenter<HeroConfig, Hero, HeroView>
 		, IUpdatable
 		, IListener<AddStatModifierCommand<GameStat.Speed>.Result<GameStat.Speed>>
@@ -18,6 +21,8 @@ namespace Game.Presentation
 		, IListener<HeroLandCommand.Result>
 	{
 		private Dictionary<HeroStateType, HeroState> _statesMap;
+		
+		// current hero visual state
 		private HeroState _heroState;
 		
 		protected override string InitializeViewGroup() => "Hero";
@@ -51,9 +56,12 @@ namespace Game.Presentation
 			// set initial state
 			_heroState = _statesMap[Model.State];
 			
+			// set speed depend on speed stat
 			var speedStat = Model.Stats.Find<GameStat.Speed>();
 			View.SetSpeed(speedStat.GetValue());
 
+			// add event handlers to listen when hero collides with collectibles
+			// and when is landed to ground
 			View.OnCollideWith += OnCollideWith;
 			View.OnLanded += OnLanded;
 		}
@@ -67,6 +75,8 @@ namespace Game.Presentation
 			EngineInput.Push(new HeroCollectItemCommand(Model.Uid, elementUid.Value));
 		}
 		
+		// On hero view says that hero is landed
+		// we need to push land command to the engine to notify it about the landing
 		private void OnLanded()
 		{
 			EngineInput.Push(new HeroLandCommand(Model.Uid));
@@ -75,6 +85,7 @@ namespace Game.Presentation
 		protected override void OnDeactivate()
 		{
 			View.OnCollideWith -= OnCollideWith;
+			View.OnLanded -= OnLanded;
 		}
 		
 		// Syncs hero speed from model to view
@@ -89,6 +100,9 @@ namespace Game.Presentation
 			_heroState.Update();
 		}
 
+		/// <summary>
+		/// Changes hero visual state
+		/// </summary>
 		private void ChangeStateTo(HeroStateType value)
 		{
 			if (_heroState == _statesMap[value]) 
@@ -98,6 +112,18 @@ namespace Game.Presentation
 				_heroState = _statesMap[value];
 				_heroState.OnActivate();
 			});
+		}
+		
+		// Checks if the status config has setState(SuperFly) effect
+		private bool IsSuperFlyStatus(StatusConfig config)
+		{
+			foreach (var effect in config.Effects) {
+				if (effect.Action == EffectAction.SetState && effect.StateValue == HeroStateType.SuperFly) {
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		/// <summary>
@@ -140,9 +166,16 @@ namespace Game.Presentation
 			ChangeStateTo(cmdResult.State);
 		}
 
+		/// <summary>
+		/// Reacts on remove status from the hero
+		/// </summary>
+		/// <param name="cmdResult"></param>
 		public void On(RemoveStatusCommand.Result cmdResult)
 		{
 			if (cmdResult.Status == CmdStatus.Failed)
+				return;
+			
+			if (cmdResult.TargetUid != Model.Uid)
 				return;
 
 			var statusConfig = Configs.Statuses.Get(cmdResult.RemovedStatusConfigId);
@@ -153,17 +186,9 @@ namespace Game.Presentation
 			}
 		}
 
-		private bool IsSuperFlyStatus(StatusConfig config)
-		{
-			foreach (var effect in config.Effects) {
-				if (effect.Action == EffectAction.SetState && effect.StateValue == HeroStateType.SuperFly) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
+		/// <summary>
+		/// Reacts on jump.
+		/// </summary>
 		public void On(HeroJumpCommand.Result cmdResult)
 		{
 			if (cmdResult.Status == CmdStatus.Failed)
@@ -175,6 +200,9 @@ namespace Game.Presentation
 			ChangeStateTo(HeroStateType.Jump);
 		}
 
+		/// <summary>
+		/// Reacts on land to the ground.
+		/// </summary>
 		public void On(HeroLandCommand.Result cmdResult)
 		{
 			if (cmdResult.Status == CmdStatus.Failed)

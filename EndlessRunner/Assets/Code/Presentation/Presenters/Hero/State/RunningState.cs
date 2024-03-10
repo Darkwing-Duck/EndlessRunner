@@ -6,6 +6,9 @@ using UnityEngine;
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Processes hero running state.
+	/// </summary>
 	public class RunningState : HeroState
 	{
 		private static readonly int _run = Animator.StringToHash("Run");

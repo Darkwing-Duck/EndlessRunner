@@ -10,6 +10,9 @@ namespace Game.Engine.Tests
 		public TestStat(float baseValue) : base(baseValue) { }
 	}
 
+	/// <summary>
+	/// Some tests for stats system.
+	/// </summary>
 	[TestFixture]
 	public class StatsRegistryTests
 	{

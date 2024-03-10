@@ -5,6 +5,9 @@ using UnityEngine;
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Processes hero SuperFly state
+	/// </summary>
 	public class SuperFlyState : HeroState
 	{
 		private static readonly int _superFly = Animator.StringToHash("SuperFly");
@@ -27,10 +30,6 @@ namespace Game.Presentation
 			DOVirtual.DelayedCall(0.5f, () => {
 				callback?.Invoke();
 			});
-			     // Hero.View.transform.DOMoveY(0f, 0.5f)
-			     // .OnComplete(() => {
-				    //
-			     // });
 			
 		}
 	}

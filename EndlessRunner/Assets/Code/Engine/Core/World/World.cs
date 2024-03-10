@@ -3,7 +3,10 @@ using Game.Common;
 namespace Game.Engine
 {
 
-	public class World : IUpdatable
+	/// <summary>
+	/// Root of the game state.
+	/// </summary>
+	public class World
 	{
 		public readonly ElementsRegistry Elements;
 

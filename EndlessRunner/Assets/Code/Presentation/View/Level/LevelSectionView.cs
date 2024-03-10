@@ -3,6 +3,10 @@ using UnityEngine;
 namespace Game.Presentation.View
 {
 
+	/// <summary>
+	/// Level section view.
+	/// Endless level is constructing from these sections.
+	/// </summary>
 	public class LevelSectionView : MonoBehaviour
 	{
 		[SerializeField]

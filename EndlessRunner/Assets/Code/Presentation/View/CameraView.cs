@@ -1,11 +1,9 @@
 using UnityEngine;
 
-namespace Code.Presentation.View
+namespace Game.Presentation.View
 {
 
 	public class CameraView : MonoBehaviour
-	{
-		
-	}
+	{ }
 
 }

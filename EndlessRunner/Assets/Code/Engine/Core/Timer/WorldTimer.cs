@@ -3,6 +3,9 @@ using Game.Common;
 namespace Game.Engine.Core
 {
 
+	/// <summary>
+	/// World timer based on ticks.
+	/// </summary>
 	public class WorldTimer : IUpdatable
 	{
 		public int Duration { get; private set; }

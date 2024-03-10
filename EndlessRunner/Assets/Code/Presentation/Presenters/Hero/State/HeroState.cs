@@ -4,6 +4,9 @@ using Game.Common;
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Base hero visual state
+	/// </summary>
 	public abstract class HeroState : IUpdatable
 	{
 		protected HeroPresenter Hero;

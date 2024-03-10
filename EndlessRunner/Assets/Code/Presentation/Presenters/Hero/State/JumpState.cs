@@ -4,6 +4,9 @@ using UnityEngine;
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Processes hero jump state.
+	/// </summary>
 	public class JumpState : HeroState
 	{
 		private static readonly int _jump = Animator.StringToHash("Jump");
@@ -18,7 +21,7 @@ namespace Game.Presentation
 
 		public override void OnDeactivate(Action callback)
 		{
-			callback();
+			callback?.Invoke();
 		}
 	}
 

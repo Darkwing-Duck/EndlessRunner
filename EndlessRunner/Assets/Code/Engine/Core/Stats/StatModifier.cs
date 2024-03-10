@@ -15,12 +15,19 @@ namespace Game.Engine
 
 		public abstract float Modify(float statValue);
 
+		/// <summary>
+		/// Star modifier describes addition math operation.
+		/// Made as nested class to be called like 'new StatModifier.Add()'
+		/// </summary>
 		public class Add : StatModifier
 		{
 			public Add(float modifierValue, object group = null) : base(modifierValue, group) { }
 			public override float Modify(float statValue) => statValue + ModifierValue;
 		}
 		
+		/// <summary>
+		/// Star modifier describes subtraction math operation.
+		/// </summary>
 		public class Sub : StatModifier
 		{
 			public Sub(float modifierValue, object group = null) : base(modifierValue, group) { }

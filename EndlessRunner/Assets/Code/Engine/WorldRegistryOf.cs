@@ -3,6 +3,9 @@ using System.Collections.Generic;
 namespace Game.Engine
 {
 
+	/// <summary>
+	/// Base class of container for world based registry of entity types.
+	/// </summary>
 	public class WorldRegistryOf<T> where T : WorldEntity
 	{
 		private readonly Dictionary<uint, T> _map = new();

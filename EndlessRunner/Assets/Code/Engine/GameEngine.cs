@@ -7,6 +7,10 @@ using Utils;
 namespace Game.Engine
 {
 	
+	/// <summary>
+	/// Game engine facade.
+	/// Controls game simulation.
+	/// </summary>
 	public class GameEngine : IEngineInput, IExecutorRegistry, IUpdatable
 	{
 		public readonly World World;

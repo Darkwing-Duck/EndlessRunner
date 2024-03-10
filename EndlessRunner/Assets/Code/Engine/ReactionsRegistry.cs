@@ -5,12 +5,12 @@ namespace Game.Engine
 
 	public interface IReactionsRegistry
 	{
-		public void Flush(CmdResult cmdResult)
-		{
-			
-		}
+		public void Flush(CmdResult cmdResult);
 	}
 
+	/// <summary>
+	/// Container of all registered reactions of certain type.
+	/// </summary>
 	public class ReactionsRegistry<T> : IReactionsRegistry where T : CmdResult
 	{
 		private List<IEngineReactionOn<T>> _reactions = new();

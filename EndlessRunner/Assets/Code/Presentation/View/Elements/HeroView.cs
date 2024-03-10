@@ -4,6 +4,9 @@ using UnityEngine;
 namespace Game.Presentation.View
 {
 	
+	/// <summary>
+	/// Provides access to hero view. Encapsulates Unity specific view logic. 
+	/// </summary>
 	[RequireComponent(typeof(Rigidbody))]
 	public class HeroView : ElementView
 	{

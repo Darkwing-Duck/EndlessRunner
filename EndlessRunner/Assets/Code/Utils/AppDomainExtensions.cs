@@ -5,6 +5,9 @@ using System.Reflection;
 namespace Utils
 {
 
+    /// <summary>
+    /// Utility class to find only user defined types through the reflection.
+    /// </summary>
 	public static class AppDomainExtensions
 	{
 		public static IEnumerable<Assembly> GetUserDefinedAssemblies(this AppDomain appDomain)

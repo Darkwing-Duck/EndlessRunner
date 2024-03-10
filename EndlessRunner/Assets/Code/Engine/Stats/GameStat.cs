@@ -7,7 +7,7 @@ namespace Game.Engine
 	public class GameStat
 	{
 		/// <summary>
-		/// Health stat can be used to store current element health
+		/// Health stat can be used to store current element health.
 		/// </summary>
 		public class Health : Stat { public Health(float baseValue) : base(baseValue) { } }
 		

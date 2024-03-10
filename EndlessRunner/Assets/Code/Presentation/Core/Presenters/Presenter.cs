@@ -9,6 +9,9 @@ using Object = UnityEngine.Object;
 namespace Game.Presentation
 {
 
+	/// <summary>
+	/// Base class for presenters
+	/// </summary>
 	public abstract class Presenter
 	{
 		/// <summary>
@@ -43,6 +46,10 @@ namespace Game.Presentation
 		internal abstract void Configure();
 	}
 	
+	/// <summary>
+	/// Base class for presenters of the specific view type 
+	/// </summary>
+	/// <typeparam name="TView">MonoBehaviour view type</typeparam>
 	public abstract class Presenter<TView> : Presenter where TView : MonoBehaviour
 	{
 		/// <summary>
@@ -89,7 +96,7 @@ namespace Game.Presentation
 		internal override void Configure() { }
 
 		/// <summary>
-		/// Builds the presenter
+		/// Builds the presenter and creates view.
 		/// </summary>
 		internal override void Build()
 		{

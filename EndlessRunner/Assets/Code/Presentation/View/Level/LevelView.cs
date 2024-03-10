@@ -2,12 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Presentation.View;
 using UnityEngine;
 
-namespace Code.Presentation.View
+namespace Game.Presentation.View
 {
 
+	/// <summary>
+	/// Level view.
+	/// Encapsulates endless level generating logic.
+	/// But in real project the logic have to be moved to presenter.
+	/// </summary>
 	public class LevelView : MonoBehaviour
 	{
 		[SerializeField]
@@ -98,6 +102,9 @@ namespace Code.Presentation.View
 			TryKeepMaxSectionCount();
 		}
 
+		/// <summary>
+		/// Determines if we need to remove some sections or not
+		/// </summary>
 		private void TryKeepMaxSectionCount()
 		{
 			if (_sections.Count <= _maxSections)
@@ -110,6 +117,9 @@ namespace Code.Presentation.View
 			}
 		}
 
+		/// <summary>
+		/// Removes sections from the beginning of level and put them to pool.
+		/// </summary>
 		private void RemoveSection()
 		{
 			var sectionToRemove = _sections[0];
